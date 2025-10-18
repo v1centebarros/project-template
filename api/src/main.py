@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.routers import product
 
 
 app = FastAPI(
@@ -17,8 +18,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {"status": "ok"}
+
+# Include routers
+app.include_router(product.router)
 

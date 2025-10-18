@@ -1,5 +1,4 @@
-
-
+from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,6 +10,22 @@ class Settings(BaseSettings):
     "extra": "ignore",
   })
 
-  DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/dbname" #TODO: change default value
+  POSTGRES_SERVER: str
+  POSTGRES_PORT: int = 5432
+  POSTGRES_USER: str
+  POSTGRES_PASSWORD: str = ""
+  POSTGRES_DB: str = ""
 
-settings = Settings()
+  @computed_field
+  @property
+  def PGSQL_DATABASE_URI(self) -> PostgresDsn:
+      return PostgresDsn.build(
+          scheme="postgresql+psycopg",
+          username=self.POSTGRES_USER,
+          password=self.POSTGRES_PASSWORD,
+          host=self.POSTGRES_SERVER,
+          port=self.POSTGRES_PORT,
+          path=self.POSTGRES_DB,
+        )
+  
+settings = Settings() # type: ignore
