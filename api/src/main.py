@@ -1,6 +1,16 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.core.db import init_db
 from src.routers import product
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Initialize database
+    await init_db()
+    yield
+    # Shutdown: Add cleanup code here if needed
 
 
 app = FastAPI(
@@ -8,7 +18,7 @@ app = FastAPI(
     summary="API to serve Project Template.",
     openapi_url="/openapi.json",
     docs_url="/api/docs",
-    # lifespan=lifespan,
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -18,9 +28,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
+
 
 @app.get("/health", tags=["Health"])
 async def health_check():
