@@ -35,5 +35,5 @@ async def health_check():
     return {"status": "ok"}
 
 # Include routers
-app.include_router(product.router)
+app.include_router(product.router,prefix="/api/products", tags=["products"])
 

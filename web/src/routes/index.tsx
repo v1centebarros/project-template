@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
-import { getProductOptions } from '@/hooks/use-product';
-import { Product } from '@/lib/types';
+import { useProduct } from '@/hooks/use-product';
+import { AddProductButton } from '@/components/addProductButton';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -9,10 +8,11 @@ export const Route = createFileRoute('/')({
 
 function Index() {
 
-  const { data: products, isLoading, isError } = useQuery<Product[]>(getProductOptions());
+  const { data: products, isLoading, isError } = useProduct();
   return (
     <div className="p-2">
       <h3>Welcome Home!</h3>
+      <AddProductButton />
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error loading products</p>}
       {products && (

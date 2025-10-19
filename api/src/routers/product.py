@@ -9,7 +9,7 @@ from src.models.product import Product, ProductCreate, ProductUpdate
 from src.services.product import ProductService
 
 
-router = APIRouter(prefix="/products", tags=["products"])
+router = APIRouter()
 product_service = ProductService()
 
 @router.get("/", response_model=list[Product])

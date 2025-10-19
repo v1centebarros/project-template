@@ -6,3 +6,10 @@ export interface Product {
   price: number;
   in_stock: boolean;
 }
+
+export interface NewProduct {
+  name: string;
+  description: string;
+  price: number;
+  in_stock: boolean;
+}
