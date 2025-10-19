@@ -1,4 +1,5 @@
 import { useAddProduct } from "@/hooks/use-product";
+import { Button } from "@/components/ui/button";
 
 
 export function AddProductButton() {
@@ -13,12 +14,12 @@ export function AddProductButton() {
     });
   };
   return (
-    <button
+    <Button
       onClick={handleAddProduct}
       disabled={addProductMutation.isPending}
-      className="px-4 py-2 bg-blue-500 text-white rounded"
+      variant={"outline"}
     >
       {addProductMutation.isPending ? "Adding..." : "Add Product"}
-    </button>
+    </Button>
   );
 }
