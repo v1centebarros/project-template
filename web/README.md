@@ -645,19 +645,5 @@ npm run build
 - [Radix UI](https://www.radix-ui.com/docs/primitives)
 - [Zod Documentation](https://zod.dev/)
 
-## 💡 Exercise Ideas
-
-1. Add user authentication flow
-2. Create a dashboard with charts
-3. Implement infinite scroll
-4. Add file upload with preview
-5. Create a shopping cart
-6. Build a search with filters
-7. Add real-time updates with WebSockets
-8. Implement drag-and-drop
-9. Create a multi-step form
-10. Build a responsive navbar with mobile menu
-
----
 
 **Need help?** Check the main [project README](../README.md) or explore the TanStack documentation.

@@ -424,18 +424,6 @@ FastAPI automatically generates interactive API documentation:
 - [Pydantic Documentation](https://docs.pydantic.dev/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 
-## 🎓 Exercise Ideas
-
-1. Add authentication with JWT tokens
-2. Implement pagination for list endpoints
-3. Add filtering and sorting capabilities
-4. Create relationship models (one-to-many, many-to-many)
-6. Implement file upload endpoints
-7. Add caching with Redis
-8. Create background tasks with Celery
-9. Add comprehensive error handling
-10. Implement rate limiting
-
 ---
 
 **Need help?** Check the main [project README](../README.md) or consult the FastAPI documentation.
