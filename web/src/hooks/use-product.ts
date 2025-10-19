@@ -24,5 +24,18 @@ const useAddProduct = () => {
   });
 };
 
+const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationKey: ['deleteProduct'],
+    mutationFn: (productId: number) =>
+      apiClient.delete(`/products/${productId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product'] });
+    }
+  });
+};
 
-export { useProduct, useAddProduct };
+
+export { useProduct, useAddProduct, useDeleteProduct };
