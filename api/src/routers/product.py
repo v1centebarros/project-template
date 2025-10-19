@@ -15,8 +15,6 @@ product_service = ProductService()
 @router.get("/", response_model=list[Product])
 def get_products(session: SessionDep, skip: int = 0, limit: int = 100):
   products = product_service.get_products(session=session, skip=skip, limit=limit)
-  if not products:
-    raise HTTPException(status_code=404, detail="No products found")
   return products
 
 @router.get("/{product_id}", response_model=Product)
