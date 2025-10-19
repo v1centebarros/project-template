@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useProduct } from '@/hooks/use-product';
-import { AddProductButton } from '@/components/addProductButton';
+import { ProductForm } from '@/components/productForm';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -12,7 +12,6 @@ function Index() {
   return (
     <div className="p-2">
       <h3>Welcome Home!</h3>
-      <AddProductButton />
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error loading products</p>}
       {products && (

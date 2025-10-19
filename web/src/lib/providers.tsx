@@ -9,10 +9,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <NuqsAdapter>
             <QueryClientProvider client={queryClient}>
                 {children}
-                <Toaster />
                 {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
             </QueryClientProvider>
-            {/* <Toaster /> */}
+            <Toaster />
         </NuqsAdapter>
     );
 }
