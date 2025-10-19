@@ -1,0 +1,22 @@
+
+name: template-project
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+volumes:
+  db_data:
