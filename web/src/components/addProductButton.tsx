@@ -1,6 +1,6 @@
 import { useAddProduct } from "@/hooks/use-product";
 import { Button } from "@/components/ui/button";
-
+import { toast } from "sonner"
 
 export function AddProductButton() {
 
@@ -12,6 +12,8 @@ export function AddProductButton() {
       description: "asdasd",
       in_stock: false
     });
+
+    toast.success("Product added successfully!");
   };
   return (
     <Button
