@@ -1,0 +1,14 @@
+# Copy this file to terraform.tfvars and update with your values
+
+project_name = "template-project"
+db_username  = "myuser"
+db_password  = "mypassword"
+db_name      = "mydatabase"
+
+# Port configuration (each replica gets port + index)
+api_port     = 8000  # API replicas will use 8000, 8001, 8002...
+web_port     = 3000  # Web replicas will use 3000, 3001, 3002...
+
+# Replica configuration (stateless services only)
+api_replicas = 2  # Number of API containers
+web_replicas = 2  # Number of web containers

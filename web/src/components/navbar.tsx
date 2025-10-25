@@ -1,8 +1,25 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from './ui/button'
-import { HomeIcon, Plus, Package } from 'lucide-react'
+import { HomeIcon, Plus, Package, Server } from 'lucide-react'
+import { apiClient } from '@/lib/api-client'
+import { useEffect, useState } from 'react'
 
 export function Navbar() {
+  const [replicaId, setReplicaId] = useState<string | null>(null)
+  const [upstreamServer, setUpstreamServer] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Poll for replica info every 2 seconds
+    const interval = setInterval(() => {
+      const replica = apiClient.getLastReplicaId()
+      const upstream = apiClient.getLastUpstreamServer()
+      if (replica) setReplicaId(replica)
+      if (upstream) setUpstreamServer(upstream)
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <>
       <nav className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,6 +47,16 @@ export function Navbar() {
                 </Link>
               </Button>
             </div>
+
+            {/* Replica Info */}
+            {replicaId && (
+              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                <Server className="h-3 w-3" />
+                <span title={`Upstream: ${upstreamServer || 'unknown'}`}>
+                  Replica: <span className="font-mono font-semibold">{replicaId}</span>
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </nav>
