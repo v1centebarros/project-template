@@ -6,6 +6,10 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "~> 3.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
   }
 }
 
@@ -123,6 +127,15 @@ resource "docker_container" "web" {
   depends_on = [docker_container.api]
 }
 
+# Generate nginx configuration dynamically based on replica counts
+resource "local_file" "nginx_lb_config" {
+  content = templatefile("${path.module}/nginx-lb.conf.tpl", {
+    api_replicas = var.api_replicas
+    web_replicas = var.web_replicas
+  })
+  filename = "${path.module}/nginx-lb-generated.conf"
+}
+
 # Load Balancer Container - Gateway between internal network and external world
 resource "docker_container" "load_balancer" {
   name  = "${var.project_name}-lb"
@@ -145,12 +158,12 @@ resource "docker_container" "load_balancer" {
     external = 80
   }
   
-  # Mount the load balancer nginx configuration
+  # Mount the dynamically generated load balancer nginx configuration
   volumes {
-    host_path      = abspath("${path.module}/nginx-lb.conf")
+    host_path      = abspath("${path.module}/nginx-lb-generated.conf")
     container_path = "/etc/nginx/nginx.conf"
     read_only      = true
   }
   
-  depends_on = [docker_container.api, docker_container.web]
+  depends_on = [docker_container.api, docker_container.web, local_file.nginx_lb_config]
 }
