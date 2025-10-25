@@ -18,11 +18,6 @@ output "load_balancer_web_url" {
   value       = "http://localhost:80"
 }
 
-output "load_balancer_api_url" {
-  description = "URL to access the API through load balancer"
-  value       = "http://localhost:8080"
-}
-
 output "api_containers" {
   description = "Information about all API containers"
   value = [
@@ -68,17 +63,19 @@ output "summary" {
     load_balancer = {
       name    = "${var.project_name}-lb"
       web_url = "http://localhost:80"
-      api_url = "http://localhost:8080"
+      note    = "Single entry point - all traffic routes through port 80"
     }
     network = {
       name   = docker_network.app_network.name
       subnet = "172.25.0.0/16"
+      type   = "internal (isolated)"
     }
     database = {
       name     = docker_container.database.name
       ip       = docker_container.database.network_data[0].ip_address
       port     = 5432
       replicas = 1
+      access   = "internal only"
     }
     api = {
       replicas  = var.api_replicas
@@ -88,6 +85,7 @@ output "summary" {
           ip   = container.network_data[0].ip_address
         }
       ]
+      access = "internal only (via /api/* on load balancer)"
     }
     web = {
       replicas  = var.web_replicas
@@ -97,6 +95,7 @@ output "summary" {
           ip   = container.network_data[0].ip_address
         }
       ]
+      access = "internal only (via load balancer)"
     }
   }
 }

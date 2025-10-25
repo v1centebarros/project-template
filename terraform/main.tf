@@ -13,10 +13,10 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-# Create a custom network for the infrastructure
 resource "docker_network" "app_network" {
-  name = "${var.project_name}-network"
-  driver = "bridge"
+  name     = "${var.project_name}-network"
+  driver   = "bridge"
+  internal = true 
   
   ipam_config {
     subnet  = "172.25.0.0/16"
@@ -46,12 +46,7 @@ resource "docker_container" "database" {
     name = docker_network.app_network.name
     ipv4_address = "172.25.0.10"
   }
-  
-  ports {
-    internal = 5432
-    external = 5432
-  }
-  
+    
   volumes {
     volume_name    = docker_volume.db_data.name
     container_path = "/var/lib/postgresql/data"
@@ -68,8 +63,6 @@ resource "docker_image" "api" {
   name = "${var.project_name}-api:latest"
   keep_locally = true
   
-  # This will use a locally built image
-  # You need to build it first: docker build -t template-project-api:latest ../api
   build {
     context    = "../api"
     dockerfile = "Dockerfile"
@@ -98,10 +91,6 @@ resource "docker_container" "api" {
     ipv4_address = "172.25.0.${20 + count.index}"
   }
   
-  # No external ports - accessed only through load balancer
-  ports {
-    internal = 80
-  }
   
   depends_on = [docker_container.database]
 }
@@ -130,16 +119,11 @@ resource "docker_container" "web" {
     name = docker_network.app_network.name
     ipv4_address = "172.25.0.${30 + count.index}"
   }
-  
-  # No external ports - accessed only through load balancer
-  ports {
-    internal = 80
-  }
-  
+    
   depends_on = [docker_container.api]
 }
 
-# Load Balancer Container
+# Load Balancer Container - Gateway between internal network and external world
 resource "docker_container" "load_balancer" {
   name  = "${var.project_name}-lb"
   image = "nginx:alpine"
@@ -151,15 +135,14 @@ resource "docker_container" "load_balancer" {
     ipv4_address = "172.25.0.100"
   }
   
-  # External ports for load balancer
-  ports {
-    internal = 80
-    external = 80
+  # ALSO connected to default bridge for external access
+  networks_advanced {
+    name = "bridge"
   }
   
   ports {
-    internal = 8080
-    external = 8080
+    internal = 80
+    external = 80
   }
   
   # Mount the load balancer nginx configuration
